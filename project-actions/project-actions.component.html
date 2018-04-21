@@ -1,0 +1,198 @@
+<div class="button-page">
+
+  <div class="col-sm-14">
+    <app-card [title]=pname>
+      <div class="row">
+
+        <div class="col-sm-12 model-btn-card">
+          <button type="button" (click)="onOld(ProjectName)" class="btn btn-primary btn-round btn-block"><i class="icofont icofont-plus-circle"></i>Add +</button>
+          <button type="button" (click)="AddRessources(pname)" class="btn btn-primary btn-round btn-block"><i class="icofont icofont-plus-circle"></i>Add Ressources</button>
+          <button type="button" (click)="UploadWSDL()" class="btn btn-primary btn-round btn-block"><i class="icofont icofont-upload-alt"></i>WSDl Upload</button>
+          <button type="button" (click)="AddJMS()" class="btn btn-primary btn-round btn-block"><i class="icofont icofont-plus-circle"></i>Add JMS</button>
+
+
+
+        </div>
+      </div>
+    </app-card>
+
+  </div>
+
+</div>
+
+
+<div *ngIf="operation" id="content">
+  Add Operations to <strong>{{pname}}</strong>
+  <div class="table-responsive">
+    <form #formCtrl="ngForm">
+      <table id="customers">
+        <thead>
+          <tr>
+            <th>
+              Operation Name
+            </th>
+            <th>
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let Operation of OperationsArray; let i=index">
+            <td>
+              {{Operation}}
+            </td>
+            <td>
+              <button type="button" (click)="deleteFieldValue(i)" class="lil_btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" autofocus="autofocus" [(ngModel)]="newAttribute" name="newAttribute" required ngControl="newAttributeCtrl" />
+            </td>
+            <td>
+              <button type="button" (click)="addFieldValue()" class="lil_btn">Add</button>
+            </td>
+          </tr>
+
+        </tbody>
+        <button type="button" (click)="onSubmitOp()" [disabled]="formCtrl.form.valid">Submit</button>
+      </table>
+    </form>
+
+  </div>
+
+</div>
+
+<div *ngIf="OperationsNotAdded">
+  <div class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Fail !</strong> Some Operations Exist With The Same Names
+  </div>
+</div>
+<div *ngIf="OperationsAdded">
+  <div class="alert_suc">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success!</strong> Operations Added With Success.
+  </div>
+</div>
+<div *ngIf="addXSDSucc">
+  <div class="btn btn-success waves-effect">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success!</strong> Operations XSD are added to <strong>{{pname}} </strong> With Success.
+  </div>
+</div>
+<div *ngIf="addXSDfail">
+  <div class="btn btn-danger waves-effect">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Fail!</strong> Operations might already exist in <strong>{{pname}} </strong> WSDL Please Check them .
+  </div>
+</div>
+<div *ngIf="downloadSuccess">
+  <div class="btn btn-success waves-effect">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success! {{pname}} </strong> downloaded With Success.
+  </div>
+</div>
+
+<div *ngIf="uploadwsdlurl">
+  <form #f="ngForm" (ngSubmit)="onSubmitUpload(f)" novalidate>
+    <label for="wsdlurl">  Enter WSDL URL</label>
+    <input name="wsdlurl" placeholder="WSDl URL.." ngModel #wsdlurl="ngModel" autofocus="autofocus">
+    <a (click)="LoadFromUrl(f)"><b>Load File</b></a><br><br>
+    <button class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<div *ngIf="uploadwsdlfile">
+  <form #f="ngForm" (ngSubmit)="onSubmitUpload(f)" novalidate>
+    <label for="wsdlfile">  OR Upload File</label>
+    <input name="wsdlurl" type="file" ngModel #wsdlfile="ngModel" (change)="fileChange($event)" placeholder="Upload file" accept=".wsdl" id="avatar" />
+  </form>
+
+
+  <button class="btn btn-primary" (click)="onSubmitUpload(f)">Submit</button>
+</div>
+
+<div *ngIf="successupload">
+  <div class="alert alert-success">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success!</strong> WSDL File added to <strong>{{pname}} </strong> With Success.
+  </div>
+</div>
+<div *ngIf="addCallSucc">
+  <div class="alert_suc">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success!</strong> Call Operations are added to <strong>{{pname}} </strong> With Success.
+  </div>
+</div>
+
+<div *ngIf="addCallfail">
+  <div class="btn btn-danger waves-effect">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Fail!</strong>You should check at least one operation <strong>{{pname}} </strong> Please Check Again.
+  </div>
+</div>
+
+
+<div *ngIf="displayOperationsList">
+  <form #f="ngForm" (ngSubmit)="onSubmitUpload(f)" novalidate>
+    <table class="table">
+      <thead>
+        <tr>
+
+          <th>Operation Name</th>
+          <th><input type="checkbox" (change)=CheckAll(f)/></th>
+        </tr>
+
+      </thead>
+      <tbody>
+        <tr *ngFor="let Opname of WsdLOpsArray; let i=index">
+          <td>
+            {{Opname}}
+          </td>
+          <td>
+            <input #check type="checkbox" (change)="OnChecked(Opname, check.checked)" />
+          </td>
+        </tr>
+
+      </tbody>
+      <button type="button" class="btn btn-primary" (click)="SelectOperations()">Submit Operations</button>
+
+    </table>
+  </form>
+</div>
+
+
+<div *ngIf="addLog">
+  <form #f="ngForm" novalidate>
+    <table>
+
+      <tbody>
+        <tr>
+          <td>Operation Name</td>
+          <td>Add Log</td>
+        </tr>
+        <tr *ngFor="let Opname of SelectedOperations; let i=index">
+          <td>
+            {{Opname}}
+          </td>
+          <td>
+            <input type="checkbox" #Loginfo value="Info" (change)="chooseLogInfo(Opname, Loginfo.checked)"> Log Info<br>
+            <input type="checkbox" #Log value="Exception" (change)="chooseLogException(Opname, Log.checked)"> Log Exception<br>
+
+          </td>
+        </tr>
+
+        <tr>
+          <button type="button" (click)="SubmitOperationsToService()" class="btn btn-primary">Create Calls</button>
+        </tr>
+
+        <tr>
+          <button type="button" class="btn btn-primary" (click)="CreateXSD()">Create Operations XSD </button>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+<div *ngIf="showActions">
+  <button type="button" (click)="ShowActions()" class="btn btn-primary">Show Actions</button>
+</div>

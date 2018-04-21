@@ -1,0 +1,86 @@
+<div *ngIf="deleteSuccess" class="bit top right" data-position="top right">
+  <div class="btn btn-success waves-effect">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <strong>Success! {{pname}}</strong> deleted With Success .
+  </div>
+</div>
+<div class="card">
+  <div class="card" *ngIf="basic">
+    <div class="card-header">
+      Projects Upload List
+    </div>
+
+    <div class="card-body">
+
+      <div class="table-responsive">
+        <table id="customers" class="table table-hover">
+          <thead>
+            <tr>
+              <th>
+                Project Name
+              </th>
+              <th>
+                Project Client
+              </th>
+              <th>
+                Project owner
+              </th>
+              <th>
+                Project Creation Date
+              </th>
+              <th>
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+
+
+            <tr *ngFor="let Project of ProjectsUploadArray; let i=index">
+              <td>
+                {{Project.project_upload_name}}
+
+              </td>
+              <td>
+                {{Project.project_upload_client_name}}
+
+              </td>
+              <td>
+                {{Project.project_upload_owner}}
+
+              </td>
+              <td>
+
+                {{Project.project_upload_crdate|date: 'medium' }}
+
+              </td>
+              <td>
+                <button type="button" (click)="DeleteField(Project.project_upload_name)" class="btn btn-primary">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="upload">
+    <table colspan="2">
+      <tr>
+        <td>
+          <form #f="ngForm" (ngSubmit)="uploadFolder(f)">
+            <label for="pname">select your Workspace </label>
+            <select id="pname" name="pname" [(ngModel)]="selectedvalue" required #pname="ngModel">
+            <option *ngFor="let pro of Projects" [value]="pro" selected>{{pro}}</option>
+          </select>
+            <label for="f_path">choose Project</label>
+            <input id="file" type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.doc,.docx,.zip">
+            <button class="btn btn-primary" type="submit"> Upload</button>
+          </form>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+</div>
